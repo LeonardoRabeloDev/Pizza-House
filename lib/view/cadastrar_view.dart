@@ -15,6 +15,9 @@ class _CadastrarViewState extends State<CadastrarView> {
   var txtNome = TextEditingController();
   var txtEmail = TextEditingController();
   var txtSenha = TextEditingController();
+  var txtCep = TextEditingController();
+  var txtRua = TextEditingController();
+  var txtNumero = TextEditingController();
 
   @override
   void initState() {
@@ -57,6 +60,28 @@ class _CadastrarViewState extends State<CadastrarView> {
                   prefixIcon: Icon(Icons.password),
                   border: OutlineInputBorder()),
             ),
+            SizedBox(height: 15),
+            TextField(
+              controller: txtCep,
+              decoration: InputDecoration(
+                  labelText: 'CEP',
+                  prefixIcon: Icon(Icons.streetview),
+                  border: OutlineInputBorder()),
+            ),
+            SizedBox(height: 15),
+            TextField(
+              controller: txtRua,
+              decoration: InputDecoration(
+                  labelText: 'Rua',
+                  border: OutlineInputBorder()),
+            ),
+            SizedBox(height: 15),
+            TextField(
+              controller: txtNumero,
+              decoration: InputDecoration(
+                  labelText: 'Número',
+                  border: OutlineInputBorder()),
+            ),
             SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -77,6 +102,9 @@ class _CadastrarViewState extends State<CadastrarView> {
                       txtNome.text,
                       txtEmail.text,
                       txtSenha.text,
+                      txtCep.text,
+                      txtRua.text,
+                      txtNumero.text,
                     );
                   },
                   child: Text('salvar'),

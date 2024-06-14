@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "941807989167",
-    "project_id": "app-lista-tarefas-engcom-bf5de",
-    "storage_bucket": "app-lista-tarefas-engcom-bf5de.appspot.com"
+    "project_number": "697658069058",
+    "project_id": "pizza-house-6e752",
+    "storage_bucket": "pizza-house-6e752.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:941807989167:android:2076d1115b2d810b377f5a",
+        "mobilesdk_app_id": "1:697658069058:android:3d6c340b0705ea6211dddb",
         "android_client_info": {
           "package_name": "com.example.app08"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDCfRkjD_tQ1PLyCNNVj5Fhv2F8cTZMQPQ"
+          "current_key": "AIzaSyD8TaevB7kr73mCnqcPlan9MAPe6BuRVLE"
         }
       ],
       "services": {

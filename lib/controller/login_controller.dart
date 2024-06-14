@@ -8,7 +8,7 @@ class LoginController {
   //
   // CRIAR CONTA de um usuário no serviço Firebase Authentication
   //
-  criarConta(context, nome, email, senha) {
+  criarConta(context, nome, email, senha, cep, rua, numero) {
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(
       email: email,
@@ -23,6 +23,9 @@ class LoginController {
           {
             "uid": resultado.user!.uid,
             "nome": nome,
+            "cep": cep,
+            "rua": rua,
+            "numero": numero,
           },
         );
 

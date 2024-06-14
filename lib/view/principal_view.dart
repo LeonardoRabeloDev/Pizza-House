@@ -120,7 +120,7 @@ class _PrincipalViewState extends State<PrincipalView> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          salvarTarefa(context);
+          salvarPizzaria(context);
         },
         child: Icon(Icons.add),
       ),
@@ -130,13 +130,13 @@ class _PrincipalViewState extends State<PrincipalView> {
   //
   // ADICIONAR TAREFA
   //
-  void salvarTarefa(context, {docId}) {
+  void salvarPizzaria(context, {docId}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
-          title: Text(docId == null ? "Adicionar Tarefa" : "Editar Tarefa"),
+          title: Text(docId == null ? "Adicionar Pizzaria" : "Editar Pizzaria"),
           content: SizedBox(
             height: 250,
             width: 300,
@@ -145,8 +145,8 @@ class _PrincipalViewState extends State<PrincipalView> {
                 TextField(
                   controller: txtTitulo,
                   decoration: InputDecoration(
-                    labelText: 'Título',
-                    prefixIcon: Icon(Icons.description),
+                    labelText: 'Nome',
+                    prefixIcon: Icon(Icons.title),
                     border: OutlineInputBorder(),
                   ),
                 ),
