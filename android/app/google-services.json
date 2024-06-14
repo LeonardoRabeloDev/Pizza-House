@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "941807989167",
+    "project_id": "app-lista-tarefas-engcom-bf5de",
+    "storage_bucket": "app-lista-tarefas-engcom-bf5de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941807989167:android:2076d1115b2d810b377f5a",
+        "android_client_info": {
+          "package_name": "com.example.app08"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCfRkjD_tQ1PLyCNNVj5Fhv2F8cTZMQPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
