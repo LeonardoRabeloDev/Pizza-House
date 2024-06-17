@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
+import 'package:app08/model/Pizzaria.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../controller/login_controller.dart';
-import '../controller/tarefa_controller.dart';
-import '../model/tarefa.dart';
+import '../controller/pizzaria_controller.dart';
 
 class PrincipalView extends StatefulWidget {
   const PrincipalView({super.key});
@@ -15,14 +15,16 @@ class PrincipalView extends StatefulWidget {
 }
 
 class _PrincipalViewState extends State<PrincipalView> {
-  var txtTitulo = TextEditingController();
-  var txtDescricao = TextEditingController();
+  var txtNome = TextEditingController();
+  var txtAvaliacao = TextEditingController();
+  String cepSelecionado = "";
+  var txtTempoEntrega = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tarefas'),
+        title: Text('Pizzas'),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -41,7 +43,7 @@ class _PrincipalViewState extends State<PrincipalView> {
         padding: const EdgeInsets.all(20.0),
         child: StreamBuilder<QuerySnapshot>(
           //fluxo de dados em tempo real
-          stream: TarefaController().listar().snapshots(),
+          stream: PizzariaController().listar().snapshots(),
 
           //exibição dos dados
           builder: (context, snapshot) {
@@ -69,8 +71,8 @@ class _PrincipalViewState extends State<PrincipalView> {
                       dynamic doc = dados.docs[index].data();
                       return Card(
                         child: ListTile(
-                          title: Text(doc['titulo']),
-                          subtitle: Text(doc['descricao']),
+                          title: Text(doc['nome']),
+                          subtitle: Text(doc['avaliacao'].toString()),
 
                           //excluir
                           trailing: SizedBox(
@@ -84,9 +86,11 @@ class _PrincipalViewState extends State<PrincipalView> {
                                   //
                                   child: IconButton(
                                     onPressed: () {
-                                      txtTitulo.text = doc['titulo'];
-                                      txtDescricao.text = doc['descricao'];
-                                      salvarTarefa(context, docId: id);
+                                      txtNome.text = doc['nome'];
+                                      txtAvaliacao.text =
+                                          doc['avaliacao'].toString();
+
+                                      salvarPizzaria(context, docId: id);
                                     },
                                     icon: Icon(Icons.edit_outlined),
                                   ),
@@ -97,7 +101,7 @@ class _PrincipalViewState extends State<PrincipalView> {
                                 //
                                 IconButton(
                                   onPressed: () {
-                                    TarefaController().excluir(context, id);
+                                    PizzariaController().excluir(context, id);
                                   },
                                   icon: Icon(Icons.delete_outlined),
                                 ),
@@ -138,12 +142,12 @@ class _PrincipalViewState extends State<PrincipalView> {
         return AlertDialog(
           title: Text(docId == null ? "Adicionar Pizzaria" : "Editar Pizzaria"),
           content: SizedBox(
-            height: 250,
+            height: 300,
             width: 300,
             child: Column(
               children: [
                 TextField(
-                  controller: txtTitulo,
+                  controller: txtNome,
                   decoration: InputDecoration(
                     labelText: 'Nome',
                     prefixIcon: Icon(Icons.title),
@@ -152,10 +156,41 @@ class _PrincipalViewState extends State<PrincipalView> {
                 ),
                 SizedBox(height: 15),
                 TextField(
-                  controller: txtDescricao,
-                  maxLines: 5,
+                  controller: txtAvaliacao,
                   decoration: InputDecoration(
-                    labelText: 'Descrição',
+                    labelText: 'Avaliação',
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: DropdownMenu(
+                    initialSelection: cepSelecionado,
+                    width: 250,
+                    label: const Text("Selecione o CEP"),
+                    enableSearch: false,
+                    onSelected: (cep) {
+                      if (cep != null) {
+                        setState(() {
+                          cepSelecionado = cep.toString();
+                        });
+                      }
+                    },
+                    dropdownMenuEntries: <DropdownMenuEntry>[
+                      DropdownMenuEntry(value: "14091-530", label: "14091-530"),
+                      DropdownMenuEntry(value: "14532-840", label: "14532-840"),
+                      DropdownMenuEntry(value: "14871-041", label: "14871-041"),
+                      DropdownMenuEntry(value: "14961-630", label: "14961-630"),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: txtTempoEntrega,
+                  decoration: InputDecoration(
+                    labelText: 'Tempo de entrega (minutos)',
                     alignLabelWithHint: true,
                     border: OutlineInputBorder(),
                   ),
@@ -168,8 +203,10 @@ class _PrincipalViewState extends State<PrincipalView> {
             TextButton(
               child: Text("fechar"),
               onPressed: () {
-                txtTitulo.clear();
-                txtDescricao.clear();
+                txtNome.clear();
+                txtAvaliacao.clear();
+                cepSelecionado = "";
+                txtTempoEntrega.clear();
                 Navigator.of(context).pop();
               },
             ),
@@ -177,19 +214,20 @@ class _PrincipalViewState extends State<PrincipalView> {
               child: Text("salvar"),
               onPressed: () {
                 //criar objeto Tarefa
-                var t = Tarefa(
+                var p = Pizzaria(
                   LoginController().idUsuarioLogado(),
-                  txtTitulo.text,
-                  txtDescricao.text,
+                  txtNome.text,
+                  int.parse(txtAvaliacao.text),
+                  int.parse(txtTempoEntrega.text),
                 );
 
-                txtTitulo.clear();
-                txtDescricao.clear();
+                txtNome.clear();
+                txtAvaliacao.clear();
 
                 if (docId == null) {
-                  TarefaController().adicionar(context, t);
+                  PizzariaController().adicionar(context, p);
                 } else {
-                  TarefaController().atualizar(context, docId, t);
+                  PizzariaController().atualizar(context, docId, p);
                 }
               },
             ),

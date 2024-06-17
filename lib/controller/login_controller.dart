@@ -9,6 +9,12 @@ class LoginController {
   // CRIAR CONTA de um usuário no serviço Firebase Authentication
   //
   criarConta(context, nome, email, senha, cep, rua, numero) {
+
+    if (!verificarSenha(senha)) {
+      return erro(context, "Formato de senha inválido");
+    }
+    print(senha);
+
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(
       email: email,
@@ -47,6 +53,16 @@ class LoginController {
     });
   }
 
+  bool verificarSenha(String senha) {
+    bool hasUppercase = senha.contains(new RegExp(r'[A-Z]'));
+    bool hasDigits = senha.contains(new RegExp(r'[0-9]'));
+    bool hasLowercase = senha.contains(new RegExp(r'[a-z]'));
+    bool hasSpecialCharacters =
+        senha.contains(new RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+
+    return hasDigits & hasUppercase & hasLowercase & hasSpecialCharacters;
+  }
+
   //
   // LOGIN de usuário a partir do provedor Email/Senha
   //
@@ -54,10 +70,8 @@ class LoginController {
     FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: senha)
         .then((resultado) {
-          
       sucesso(context, 'Usuário autenticado com sucesso!');
       Navigator.pushNamed(context, 'principal');
-
     }).catchError((e) {
       switch (e.code) {
         case 'invalid-email':
@@ -93,5 +107,15 @@ class LoginController {
   //
   idUsuarioLogado() {
     return FirebaseAuth.instance.currentUser!.uid;
+  }
+
+  cepUsuario() {
+    var query = FirebaseFirestore.instance
+        .collection("usuarios")
+        .where("uid", isEqualTo: idUsuarioLogado());
+
+    query.get().then((querySnapshot) {
+      print(querySnapshot);
+    });
   }
 }

@@ -20,7 +20,7 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     super.initState();
 
-    txtEmail.text = 'joao.silva@email.com';
+    txtEmail.text = 'leo@email.com';
     txtSenha.text = '123456';
   }
 
@@ -33,7 +33,7 @@ class _LoginViewState extends State<LoginView> {
           children: [
             Text(
               'Login',
-              style: TextStyle(fontSize: 60, color: Colors.blue.shade900),
+              style: TextStyle(fontSize: 60, color: Colors.red.shade900),
             ),
             SizedBox(height: 60),
             TextField(
@@ -106,7 +106,10 @@ class _LoginViewState extends State<LoginView> {
                     },
                   );
                 },
-                child: Text('Esqueceu a senha?'),
+                child: Text(
+                  'Esqueceu a senha?',
+                  style: TextStyle(color: Colors.red.shade500),
+                ),
               ),
             ),
             SizedBox(height: 15),
@@ -124,7 +127,10 @@ class _LoginViewState extends State<LoginView> {
                   txtSenha.text,
                 );
               },
-              child: Text('Entrar'),
+              child: Text(
+                'Entrar',
+                style: TextStyle(color: Colors.red.shade500),
+              ),
             ),
             SizedBox(height: 40),
             Row(
@@ -135,10 +141,22 @@ class _LoginViewState extends State<LoginView> {
                   onPressed: () {
                     Navigator.pushNamed(context, 'cadastrar');
                   },
-                  child: Text('Cadastre-se'),
+                  child: Text(
+                    'Cadastre-se',
+                    style: TextStyle(color: Colors.red.shade500),
+                  ),
                 ),
               ],
-            )
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, 'sobre');
+              },
+              child: Text(
+                'Sobre',
+                style: TextStyle(color: Colors.red.shade500),
+              ),
+            ),
           ],
         ),
       ),

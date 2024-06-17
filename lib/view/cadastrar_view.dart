@@ -15,7 +15,7 @@ class _CadastrarViewState extends State<CadastrarView> {
   var txtNome = TextEditingController();
   var txtEmail = TextEditingController();
   var txtSenha = TextEditingController();
-  var txtCep = TextEditingController();
+  String cepSelecionado = "";
   var txtRua = TextEditingController();
   var txtNumero = TextEditingController();
 
@@ -61,26 +61,38 @@ class _CadastrarViewState extends State<CadastrarView> {
                   border: OutlineInputBorder()),
             ),
             SizedBox(height: 15),
-            TextField(
-              controller: txtCep,
-              decoration: InputDecoration(
-                  labelText: 'CEP',
-                  prefixIcon: Icon(Icons.streetview),
-                  border: OutlineInputBorder()),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: DropdownMenu(
+                width: 250,
+                label: const Text("Selecione o CEP"),
+                enableSearch: false,
+                onSelected: (cep) {
+                  if (cep != null) {
+                    setState(() {
+                      cepSelecionado = cep.toString();
+                    });
+                  }
+                },
+                dropdownMenuEntries: <DropdownMenuEntry>[
+                  DropdownMenuEntry(value: "14091-530", label: "14091-530"),
+                  DropdownMenuEntry(value: "14091-530", label: "14532-840"),
+                  DropdownMenuEntry(value: "14091-530", label: "14871-041"),
+                  DropdownMenuEntry(value: "14091-530", label: "14961-630"),
+                ],
+              ),
             ),
             SizedBox(height: 15),
             TextField(
               controller: txtRua,
               decoration: InputDecoration(
-                  labelText: 'Rua',
-                  border: OutlineInputBorder()),
+                  labelText: 'Rua', border: OutlineInputBorder()),
             ),
             SizedBox(height: 15),
             TextField(
               controller: txtNumero,
               decoration: InputDecoration(
-                  labelText: 'Número',
-                  border: OutlineInputBorder()),
+                  labelText: 'Número', border: OutlineInputBorder()),
             ),
             SizedBox(height: 40),
             Row(
@@ -102,7 +114,7 @@ class _CadastrarViewState extends State<CadastrarView> {
                       txtNome.text,
                       txtEmail.text,
                       txtSenha.text,
-                      txtCep.text,
+                      cepSelecionado,
                       txtRua.text,
                       txtNumero.text,
                     );
