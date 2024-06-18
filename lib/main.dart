@@ -1,5 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:app08/view/addGarcon_view.dart';
+import 'package:app08/view/addMotoboy_view.dart';
+import 'package:app08/view/addPizzaria_view.dart';
+import 'package:app08/view/adicionar_view.dart';
 import 'package:app08/view/sobre_view.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +33,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: Color.fromARGB(39, 211, 105, 105)),
       debugShowCheckedModeBanner: false,
       initialRoute: 'login',
       routes: {
@@ -36,6 +41,10 @@ class MainApp extends StatelessWidget {
         'cadastrar': (context) => CadastrarView(),
         'principal': (context) => PrincipalView(),
         'sobre': (context) => SobreView(),
+        'adicionar': (context) => AdicionarView(),
+        'addGarcon': (context) => AddGarconView(),
+        'addPizzaria': (context) => AddPizzariaView(),
+        'addMotoboy': (context) => AddMotoboyView(),
       },
     );
   }

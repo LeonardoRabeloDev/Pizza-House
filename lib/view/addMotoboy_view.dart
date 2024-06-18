@@ -1,49 +1,42 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
-import 'package:app08/model/Pizzaria.dart';
+import 'package:app08/controller/motoboy_controller.dart';
+import 'package:app08/model/Motoboy.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../controller/login_controller.dart';
-import '../controller/pizzaria_controller.dart';
 
-class PrincipalView extends StatefulWidget {
-  const PrincipalView({super.key});
+class AddMotoboyView extends StatefulWidget {
+  const AddMotoboyView({super.key});
 
   @override
-  State<PrincipalView> createState() => _PrincipalViewState();
+  State<AddMotoboyView> createState() => _AddMotoboyViewState();
 }
 
-class _PrincipalViewState extends State<PrincipalView> {
+class _AddMotoboyViewState extends State<AddMotoboyView> {
   var txtNome = TextEditingController();
-  var txtAvaliacao = TextEditingController();
-  String cepSelecionado = "";
-  var txtTempoEntrega = TextEditingController();
+  var txtIdade = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pizzarias'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            tooltip: 'sair',
-            onPressed: () {
-              LoginController().logout();
-              Navigator.pushReplacementNamed(context, 'login');
-            },
-          ),
-        ],
+        title: const Text(
+          "Adicionar Motoboy",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red.shade500,
       ),
-
-      // BODY
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: StreamBuilder<QuerySnapshot>(
           //fluxo de dados em tempo real
-          stream: PizzariaController().listar().snapshots(),
+          stream: MotoboyController().listar().snapshots(),
 
           //exibição dos dados
           builder: (context, snapshot) {
@@ -72,7 +65,7 @@ class _PrincipalViewState extends State<PrincipalView> {
                       return Card(
                         child: ListTile(
                           title: Text(doc['nome']),
-                          subtitle: Text("Avaliação: " + doc['avaliacao'].toString()),
+                          subtitle: Text(doc["idade"].toString() + " anos"),
 
                           //excluir
                           trailing: SizedBox(
@@ -87,10 +80,9 @@ class _PrincipalViewState extends State<PrincipalView> {
                                   child: IconButton(
                                     onPressed: () {
                                       txtNome.text = doc['nome'];
-                                      txtAvaliacao.text =
-                                          doc['avaliacao'].toString();
+                                      txtIdade.text = doc['idade'].toString();
 
-                                      salvarPizzaria(context, docId: id);
+                                      salvarGarcon(context, docId: id);
                                     },
                                     icon: Icon(Icons.edit_outlined),
                                   ),
@@ -101,7 +93,7 @@ class _PrincipalViewState extends State<PrincipalView> {
                                 //
                                 IconButton(
                                   onPressed: () {
-                                    PizzariaController().excluir(context, id);
+                                    MotoboyController().excluir(context, id);
                                   },
                                   icon: Icon(Icons.delete_outlined),
                                 ),
@@ -114,33 +106,29 @@ class _PrincipalViewState extends State<PrincipalView> {
                   );
                 } else {
                   return Center(
-                    child: Text('Nenhuma pizzaria encontrada.'),
+                    child: Text('Nenhum motoboy encontrado.'),
                   );
                 }
             }
           },
         ),
       ),
-      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "adicionar");
+          salvarGarcon(context);
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  //
-  // ADICIONAR TAREFA
-  //
-  void salvarPizzaria(context, {docId}) {
+  void salvarGarcon(context, {docId}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // retorna um objeto do tipo Dialog
         return AlertDialog(
-          title: Text(docId == null ? "Adicionar Pizzaria" : "Editar Pizzaria"),
+          title: Text(docId == null ? "Adicionar Motoboy" : "Editar Motoboy"),
           content: SizedBox(
             height: 300,
             width: 300,
@@ -156,42 +144,10 @@ class _PrincipalViewState extends State<PrincipalView> {
                 ),
                 SizedBox(height: 15),
                 TextField(
-                  controller: txtAvaliacao,
+                  controller: txtIdade,
                   decoration: InputDecoration(
-                    labelText: 'Avaliação',
-                    alignLabelWithHint: true,
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: DropdownMenu(
-                    initialSelection: cepSelecionado,
-                    width: 250,
-                    label: const Text("Selecione o CEP"),
-                    enableSearch: false,
-                    onSelected: (cep) {
-                      if (cep != null) {
-                        setState(() {
-                          cepSelecionado = cep.toString();
-                        });
-                      }
-                    },
-                    dropdownMenuEntries: <DropdownMenuEntry>[
-                      DropdownMenuEntry(value: "14091-530", label: "14091-530"),
-                      DropdownMenuEntry(value: "14532-840", label: "14532-840"),
-                      DropdownMenuEntry(value: "14871-041", label: "14871-041"),
-                      DropdownMenuEntry(value: "14961-630", label: "14961-630"),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: txtTempoEntrega,
-                  decoration: InputDecoration(
-                    labelText: 'Tempo de entrega (minutos)',
-                    alignLabelWithHint: true,
+                    labelText: 'Idade',
+                    prefixIcon: Icon(Icons.title),
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -204,9 +160,7 @@ class _PrincipalViewState extends State<PrincipalView> {
               child: Text("fechar"),
               onPressed: () {
                 txtNome.clear();
-                txtAvaliacao.clear();
-                cepSelecionado = "";
-                txtTempoEntrega.clear();
+                txtIdade.clear();
                 Navigator.of(context).pop();
               },
             ),
@@ -214,20 +168,18 @@ class _PrincipalViewState extends State<PrincipalView> {
               child: Text("salvar"),
               onPressed: () {
                 //criar objeto Tarefa
-                var p = Pizzaria(
-                  LoginController().idUsuarioLogado(),
+                var m = Motoboy(
                   txtNome.text,
-                  int.parse(txtAvaliacao.text),
-                  int.parse(txtTempoEntrega.text),
+                  int.parse(txtIdade.text),
                 );
 
                 txtNome.clear();
-                txtAvaliacao.clear();
+                txtIdade.clear;
 
                 if (docId == null) {
-                  PizzariaController().adicionar(context, p);
+                  MotoboyController().adicionar(context, m);
                 } else {
-                  PizzariaController().atualizar(context, docId, p);
+                  MotoboyController().atualizar(context, docId, m);
                 }
               },
             ),
